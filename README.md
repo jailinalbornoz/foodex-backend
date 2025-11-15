@@ -67,3 +67,7 @@ foodex-backend/
 
 ## Variables de entorno
 Ver `.env.example`.
+
+##Contribuir
+
+Lee el archivo CONTRIBUTING.md para colaborar correctamente utilizando ramas y Pull Requests.
