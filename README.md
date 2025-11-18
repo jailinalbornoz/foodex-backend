@@ -1,73 +1,173 @@
-# Foodex Backend (Django + DRF + Channels)
+# 🍽️ Foodex Backend  
+Backend profesional para el sistema Foodex — plataforma académica para gestión de recetas, ingredientes, técnicas culinarias y control de inventario para estudiantes de gastronomía.
 
-Backend para el MVP de **Foodex** (recetas, pasos, ingredientes, inventario y sincronización en tiempo real).
+Construido con **Django + Django REST Framework + JWT + Swagger** bajo una arquitectura modular y escalable.
 
-## Stack
-- Django 5
-- Django REST Framework
-- JWT (simplejwt)
-- Channels + Redis (WebSockets)
-- PostgreSQL
+---
 
-## Rápido inicio (sin Docker)
+## 🚀 Tecnologías principales
 
-```bash
+| Componente | Tecnología |
+|-----------|------------|
+| Backend | Django 5 + DRF |
+| Auth | JWT (SimpleJWT) |
+| Documentación | Swagger (drf-yasg) |
+| Base de datos | PostgreSQL (producción) / SQLite (desarrollo) |
+| WebSockets | Django Channels + Redis | --- pendiente
+| Seeds automáticos | Signals + seeds.py |
+| Control de roles | Admin / Profesor / Alumno |
+
+---
+
+# 📁 Estructura del Proyecto
+
+foodex-backend/
+│── core/
+│ ├── models/
+│ ├── serializers/
+│ ├── views/
+│ ├── permissions.py
+│ ├── services.py
+│ ├── seeds.py
+│ ├── signals.py
+│ └── urls.py
+│
+├── foodex/
+│ ├── settings.py
+│ ├── urls.py
+│ ├── wsgi.py
+│ └── asgi.py
+│
+├── manage.py
+└── README.md
+
+Crear entorno virtual
 python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
+source .venv/bin/activate  # Linux/Mac
+.venv\Scripts\activate     # Windows
+
+3️⃣ Instalar dependencias
 pip install -r requirements.txt
 
-cp .env.example .env
-# Edita credenciales de Postgres y Redis en .env
+🔑 Variables de Entorno (.env)
 
+Crear archivo .env en la raíz:
+
+SECRET_KEY=super-secreto
+DEBUG=1
+
+# PostgreSQL (opcional)
+DB_NAME=foodex
+DB_USER=postgres
+DB_PASSWORD=admin
+DB_HOST=localhost
+DB_PORT=5432
+
+# Redis
+REDIS_URL=redis://127.0.0.1:6379/0
+
+
+Si no tienes PostgreSQL, el proyecto usa SQLite automáticamente.
+
+🛠️ Migraciones
 python manage.py makemigrations
 python manage.py migrate
+
+🌱 Seeds automáticos
+
+Los seeds se ejecutan después de cada migrate (via signals):
+
+Incluye:
+
+Roles iniciales (Admin, Profesor, Alumno)
+
+Usuario administrador inicial (correo: admin@foodex.cl
+)
+
+Si quieres ejecutarlos manualmente:
+
+python manage.py shell
+>>> from core.seeds import seed_roles, seed_admin
+>>> seed_roles()
+>>> seed_admin()
+
+👤 Crear Superusuario
 python manage.py createsuperuser
 
-# correr
+🔐 Autenticación (JWT)
+Endpoint para obtener tokens:
+POST /api/v1/auth/login/
+
+
+Request:
+
+{
+  "correo_electronico": "admin@foodex.cl",
+  "password": "admin123"
+}
+
+
+Respuesta:
+
+{
+  "access": "token...",
+  "refresh": "token..."
+}
+
+
+Colocar el access token en Swagger y Postman:
+
+Authorization: Bearer <token>
+
+📘 Swagger – Documentación API
+
+Abrir en el navegador:
+
+👉 http://127.0.0.1:8000/api/docs/
+
+Se genera automáticamente con todas tus rutas, modelos y schemas.
+
+📦 Endpoints principales
+Usuarios y roles
+GET/POST     /api/v1/usuarios/
+GET          /api/v1/roles/
+
+Ingredientes / Categorías
+GET/POST     /api/v1/ingredientes/
+GET/POST     /api/v1/categorias/
+
+Recetas (CRUD + extras)
+GET/POST     /api/v1/recetas/
+GET          /api/v1/recetas/{id}/detalle_completo/
+GET          /api/v1/recetas/{id}/recalcular?porciones=10
+GET          /api/v1/recetas/buscar?q=salsa
+GET          /api/v1/recetas/por_categoria?id_categoria=1
+GET          /api/v1/recetas/por_tecnica?id_tecnica=2
+
+Canasta (stock)
+GET/POST    /api/v1/canasta/
+
+🧠 Permisos por Rol
+Rol	Permisos
+Admin	CRUD total
+Profesor	Lectura + crear recetas + editar limitados
+Alumno	Solo lectura
+
+Se controla mediante:
+
+core/permissions.py
+
+🔥 Comandos útiles
+Correr servidor
 python manage.py runserver
-```
 
-## Inicio con Docker (recomendado)
-Necesitas Docker y Docker Compose.
+Limpiar base de datos SQLite
+rm db.sqlite3
+rm core/migrations/00*.py
+python manage.py makemigrations
+python manage.py migrate
 
-```bash
-cp .env.example .env
-docker compose up -d --build
-# Crea el superusuario dentro del contenedor:
-docker compose exec web python manage.py createsuperuser
-```
+Contribución
 
-## Autenticación
-- Obtener token: `POST /api/token/` → `{ "username": "...", "password": "..." }`
-- Refrescar: `POST /api/token/refresh/`
-
-## Endpoints principales
-- `GET/POST /api/recetas/`
-- `GET /api/recetas/{id}/scale?porciones=10`
-- `GET /api/recetas/{id}/recalc-inventario?porciones=10`
-- `GET/POST /api/ingredientes/`
-- `GET/POST /api/pasos/`
-- `GET/POST /api/canasta/`
-- `GET /api/roles/` (POST/PUT solo Profesor/Admin)
-
-## WebSocket
-- URL: `ws://localhost:8000/ws/aula/<room>/`
-- Enviar (profesor):
-```json
-{"type":"anotacion","autor":"chef","texto":"Corten brunoise"}
-```
-- Todos los clientes conectados al mismo `room` reciben el mensaje.
-
-## Estructura
-```
-foodex-backend/
-├─ foodex/ (settings del proyecto)
-└─ core/   (app principal: modelos, vistas, serializers)
-```
-
-## Variables de entorno
-Ver `.env.example`.
-
-##Contribuir
-
-Lee el archivo CONTRIBUTING.md para colaborar correctamente utilizando ramas y Pull Requests.
+Pull requests y sugerencias son siempre bienvenidas ✨
+Si deseas extender el backend, contacta a tu equipo de desarrollo.

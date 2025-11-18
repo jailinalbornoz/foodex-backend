@@ -1,15 +1,16 @@
 from rest_framework import serializers
-from core.models import Ingrediente, CategoriaIngrediente
+from core.models.ingrediente import Ingrediente, CategoriaIngrediente
+
 
 class CategoriaIngredienteSerializer(serializers.ModelSerializer):
     class Meta:
         model = CategoriaIngrediente
         fields = "__all__"
 
+
 class IngredienteSerializer(serializers.ModelSerializer):
-    categoria_nombre = serializers.CharField(
-        source="id_categoria.nombre_categoria", read_only=True
-    )
+    categoria = CategoriaIngredienteSerializer(read_only=True)
+    id_categoria = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = Ingrediente
@@ -19,6 +20,6 @@ class IngredienteSerializer(serializers.ModelSerializer):
             "unidad",
             "precio_unitario",
             "calorias",
+            "categoria",
             "id_categoria",
-            "categoria_nombre",
         ]

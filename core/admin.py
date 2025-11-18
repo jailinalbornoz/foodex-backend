@@ -1,42 +1,29 @@
 from django.contrib import admin
-from .models import (
-    Role,
-    User,
-    Receta,
-    Ingrediente,
-    Etapa,
-    RecetaEtapa,
+
+from core.models.role import Role
+from core.models.user import User
+from core.models.ingrediente import CategoriaIngrediente, Ingrediente
+from core.models.ingrediente import Ingrediente
+from core.models.etapa import Etapa
+from core.models.tecnica import Tecnica
+from core.models.receta import Receta
+from core.models.relaciones import (
     RecetaIngrediente,
-    EtapaIngrediente,
-    CategoriaIngrediente,
-    Tecnica,
+    RecetaEtapa,
     RecetaTecnica,
+    EtapaIngrediente,
 )
 
-from django.contrib import admin
-
-from .models import (
-    Role,
-    User,
-    CategoriaIngrediente,
-    Ingrediente,
-    Tecnica,
-    Etapa,
-    Receta,
-    RecetaEtapa,
-    RecetaIngrediente,
-    EtapaIngrediente,
-    RecetaTecnica,
-)
 
 admin.site.register(Role)
 admin.site.register(User)
 admin.site.register(CategoriaIngrediente)
 admin.site.register(Ingrediente)
-admin.site.register(Tecnica)
 admin.site.register(Etapa)
+admin.site.register(Tecnica)
 admin.site.register(Receta)
-admin.site.register(RecetaEtapa)
+
 admin.site.register(RecetaIngrediente)
-admin.site.register(EtapaIngrediente)
+admin.site.register(RecetaEtapa)
 admin.site.register(RecetaTecnica)
+admin.site.register(EtapaIngrediente)

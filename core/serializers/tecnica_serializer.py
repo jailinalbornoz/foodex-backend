@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from core.models import Tecnica
+from core.models.tecnica import Tecnica
+
 
 class TecnicaSerializer(serializers.ModelSerializer):
     class Meta:

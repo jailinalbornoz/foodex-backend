@@ -1,30 +1,27 @@
 from rest_framework import serializers
-from core.models import User, Role
+from core.models.user import User
+from core.models.role import Role
 
+class RoleLiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Role
+        fields = ['id_rol', 'nombre_rol']
+        ref_name = "RoleInUser"
 
 class UserSerializer(serializers.ModelSerializer):
-    nombre_rol = serializers.CharField(source="id_rol.nombre_rol", read_only=True)
+    id_usuario = serializers.IntegerField(read_only=True)
+    id_rol = RoleLiteSerializer(read_only=True)
 
     class Meta:
         model = User
         fields = [
-            "usuario_id",
-            "nombre",
-            "apellido",
-            "rut",
-            "correo_electronico",
-            "contrasena",
-            "id_rol",
-            "nombre_rol",
+            'id_usuario',
+            'correo_electronico',
+            'nombre',
+            'apellido',
+            'rut',
+            'id_rol',
+            'is_active',
+            'is_staff'
         ]
-        extra_kwargs = {
-            "contrasena": {"write_only": True}
-        }
-
-    def create(self, validated_data):
-        user = User.objects.create(
-            **validated_data
-        )
-        user.set_password(validated_data["contrasena"])
-        user.save()
-        return user
+        read_only_fields = ('id_usuario', 'is_staff', 'is_active')
