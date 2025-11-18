@@ -1,7 +1,6 @@
 from django.db import models
 from .user import User
 
-
 class Receta(models.Model):
     id_receta = models.AutoField(primary_key=True)
     nombre_receta = models.CharField(max_length=100)
@@ -11,15 +10,7 @@ class Receta(models.Model):
     detalle_montaje = models.TextField(null=True, blank=True)
     justificacion_tecnica = models.TextField(null=True, blank=True)
     justificacion_comercial = models.TextField(null=True, blank=True)
-
-    usuario = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        db_column="usuario_id"
-    )
-
-    class Meta:
-        db_table = "recetas"
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.nombre_receta

@@ -1,19 +1,42 @@
 from django.contrib import admin
-from .models import Role, User, Receta, Ingrediente, PasoProcedimiento, Canasta
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from .models import (
+    Role,
+    User,
+    Receta,
+    Ingrediente,
+    Etapa,
+    RecetaEtapa,
+    RecetaIngrediente,
+    EtapaIngrediente,
+    CategoriaIngrediente,
+    Tecnica,
+    RecetaTecnica,
+)
 
-@admin.register(Role)
-class RoleAdmin(admin.ModelAdmin):
-    list_display = ("id", "nombre_rol")
+from django.contrib import admin
 
-class UserAdmin(BaseUserAdmin):
-    fieldsets = BaseUserAdmin.fieldsets + ((None, {"fields": ("rol","semestre","carrera")}),)
-admin.site.register(User, UserAdmin)
+from .models import (
+    Role,
+    User,
+    CategoriaIngrediente,
+    Ingrediente,
+    Tecnica,
+    Etapa,
+    Receta,
+    RecetaEtapa,
+    RecetaIngrediente,
+    EtapaIngrediente,
+    RecetaTecnica,
+)
 
-@admin.register(Receta)
-class RecetaAdmin(admin.ModelAdmin):
-    list_display = ("id","nombre_receta","autor","porciones_base","tiempo_preparacion_min")
-
+admin.site.register(Role)
+admin.site.register(User)
+admin.site.register(CategoriaIngrediente)
 admin.site.register(Ingrediente)
-admin.site.register(PasoProcedimiento)
-admin.site.register(Canasta)
+admin.site.register(Tecnica)
+admin.site.register(Etapa)
+admin.site.register(Receta)
+admin.site.register(RecetaEtapa)
+admin.site.register(RecetaIngrediente)
+admin.site.register(EtapaIngrediente)
+admin.site.register(RecetaTecnica)

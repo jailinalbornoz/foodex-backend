@@ -6,8 +6,5 @@ class Etapa(models.Model):
     descripcion = models.TextField(null=True, blank=True)
     tiempo_minutos = models.IntegerField(null=True, blank=True)
 
-    class Meta:
-        db_table = "etapas"
-
     def __str__(self):
         return self.nombre_etapa
