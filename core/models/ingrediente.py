@@ -1,12 +1,21 @@
 from django.db import models
-from .receta import Receta
+from .categoria_ingrediente import CategoriaIngrediente
 
 class Ingrediente(models.Model):
-    receta = models.ForeignKey(Receta, on_delete=models.CASCADE, related_name='ingredientes')
-    nombre_ing = models.CharField(max_length=58)
-    tipo_ing = models.CharField(max_length=58, blank=True)
-    cantidad_base = models.DecimalField(max_digits=10, decimal_places=2)
-    unidad = models.CharField(max_length=32)
+    id_ingrediente = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=100)
+    unidad = models.CharField(max_length=20)
+    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+    calorias = models.IntegerField(null=True, blank=True)
+
+    id_categoria = models.ForeignKey(
+        CategoriaIngrediente,
+        on_delete=models.CASCADE,
+        db_column="id_categoria"
+    )
+
+    class Meta:
+        db_table = "ingredientes"
 
     def __str__(self):
-        return f"{self.nombre_ing} ({self.cantidad_base} {self.unidad})"
+        return self.nombre
